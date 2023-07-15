@@ -5,14 +5,21 @@ const token = process.env.TOKEN;
 
 // Authorization token that must have been created previously. See : https://developer.spotify.com/documentation/web-api/concepts/authorization
 async function fetchWebApi(endpoint, method, body) {
-  const res = await fetch(`https://api.spotify.com/${endpoint}`, {
+  // verify auth token
+  try{
+    const res = await fetch(`https://api.spotify.com/${endpoint}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    method,
-    body:JSON.stringify(body)
-  });
-  return await res.json();
+      method,
+      body:JSON.stringify(body)
+    });
+    return await res.json();
+  }
+  catch(err){
+    console.log("auth token no longer valid");
+  }
+  
 }
 
 async function getTopTracks(){
@@ -28,7 +35,6 @@ async function getTopTrackIds(){
     ({id}) => id
   );
 }
-
 
 async function logTopTrackIds(){
   const tracks = await getTopTracks();
@@ -75,10 +81,14 @@ async function logRecommendations(){
   );
 }
 
-async function runAll() {
-  await logTopTracks();
-  await logTopTrackIds();
-  await logRecommendations();
-}
-
-runAll();
+(async function main () {
+  // You can use await inside this function block
+  try{
+    await logTopTracks();
+    await logTopTrackIds();
+    await logRecommendations();
+  }
+  catch(err){
+    console.log("short circuited script. Check auth token?");
+  }
+})();
