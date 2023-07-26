@@ -1,9 +1,13 @@
 import React from 'react';
 
 export default function MainButton(props) {
-    const display_message = props.toggled ? 'set to false' : 'set to true';
+    const display_message = props.toggled ? 'Bazinga' : 'Yoof';
     return (
-        <button onClick={props.onClick}>{display_message}</button>
+        <>
+        <button onClick={props.onClick}>
+            <span>{display_message}</span>
+        </button>
+        </>
     );
 }
 
